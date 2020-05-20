@@ -32,8 +32,11 @@ e.g. `test.meta({ category: 'smoketest', testcase: 'WEB-T111' })`
 Environment options:
 
 `BASE_URL` - adaptavist url (optional, default is https://api.adaptavist.io/tm4j/v2)
+
 `JIRA_TOKEN` - token for jira
+
 `PROJECT_KEY` - project key
+
 `TEST_CYCLE_NAME` - name for new test run
 
 
