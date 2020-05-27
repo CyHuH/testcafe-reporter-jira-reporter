@@ -27,17 +27,26 @@ module.exports = function () {
             // NOTE: This method is optional.
         },
 
-        reportTestDone (name, testRunInfo, meta) {
+        async reportTestDone (name, testRunInfo, meta) {
             const duration = testRunInfo.durationMs;
-            var comment = name;
+            var comment = `${name}\n`;
 
             const hasErr = !!testRunInfo.errs.length;
-            var status;
+            const status = hasErr ? 'fail' : 'pass';
 
-            status = hasErr ? 'fail' : 'pass';
+            if (status === 'fail') {
+                const errors =  await testRunInfo.errs;
+
+                errors.forEach(err => {
+                    comment += this.formatError(err, '\n');
+                });
+            }
+            else 
+                comment = 'Passed';
+
             // implement test report here
-            if (!testRunInfo.skipped && 'testcase' in meta && meta.testcase.length > 0)
-                requests.createTestExecution(projectKey, this.testCycleKey, meta.testcase, status, duration, comment);
+            if (!testRunInfo.skipped && 'testcase' in meta && await meta.testcase.length > 0)
+                await requests.createTestExecution(projectKey, this.testCycleKey, meta.testcase, status, duration, comment);
         },
 
         reportTaskDone (endTime, passed, warnings) {
